@@ -1,0 +1,282 @@
+/* Scoped under .zekra-dashboard so it never touches the public site pages,
+   which bring their own untouched styles via components/PublicSite.js */
+
+*{ box-sizing: border-box; }
+body{ margin: 0; font-family: "DM Sans", sans-serif; }
+
+.zekra-dashboard{
+  --bg: #1c0d15;
+  --panel: #26121c;
+  --text: #f6ece9;
+  --muted: #b98fa0;
+  --gold: #d89aaa;
+  --gold2: #f6ccd6;
+  --line: rgba(246,204,214,.14);
+  --danger: #c9767a;
+
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  font-weight: 300;
+}
+
+.zekra-dashboard h1,
+.zekra-dashboard h2,
+.zekra-dashboard h3{
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.zekra-topbar{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.zekra-wordmark{
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+
+.zekra-role{
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.zekra-main{
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.zekra-center-screen{
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.zekra-panel{
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 32px;
+}
+
+.zekra-panel + .zekra-panel{
+  margin-top: 20px;
+}
+
+.zekra-field{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.zekra-field label{
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.zekra-field input[type="text"],
+.zekra-field input[type="password"],
+.zekra-field input[type="date"],
+.zekra-field textarea{
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.zekra-field input:focus,
+.zekra-field textarea:focus{
+  border-color: var(--gold);
+}
+
+.zekra-field textarea{
+  resize: vertical;
+  min-height: 90px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.zekra-btn{
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--text);
+  padding: 11px 22px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.zekra-btn:hover{
+  background: var(--gold);
+  color: #1c0d15;
+}
+
+.zekra-btn:disabled{
+  opacity: .5;
+  cursor: default;
+}
+
+.zekra-btn.primary{
+  background: var(--gold);
+  color: #1c0d15;
+}
+
+.zekra-btn.primary:hover{
+  opacity: .9;
+}
+
+.zekra-btn.danger{
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.zekra-btn.danger:hover{
+  background: var(--danger);
+  color: #1c0d15;
+}
+
+.zekra-btn.small{
+  padding: 7px 14px;
+  font-size: 11px;
+}
+
+.zekra-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.zekra-error{
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.zekra-success{
+  color: var(--gold2);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.zekra-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.zekra-table th{
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 400;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.zekra-table td{
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.zekra-section-title{
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.zekra-slot-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.zekra-slot{
+  border: 1px solid var(--line);
+  aspect-ratio: 3 / 4;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255,255,255,.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zekra-slot img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.zekra-slot .zekra-slot-empty{
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  padding: 8px;
+}
+
+.zekra-slot-actions{
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: linear-gradient(transparent, rgba(0,0,0,.75));
+}
+
+.zekra-slot-actions label,
+.zekra-slot-actions button{
+  font-size: 10px;
+  padding: 5px 8px;
+  border: 1px solid var(--gold);
+  background: rgba(28,13,21,.7);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.zekra-slot-actions input[type="file"]{
+  display: none;
+}
+
+.zekra-copy-line{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.zekra-copy-line span:first-child{
+  color: var(--muted);
+  min-width: 90px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.zekra-copy-line code{
+  flex: 1;
+  word-break: break-all;
+}
