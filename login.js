@@ -1,52 +1,29 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { api } from "../lib/api";
+import { supabaseAdmin } from "../../../lib/supabase";
+import { verifyPassword, issueCustomerSession } from "../../../lib/auth";
 
-export default function CustomerLogin() {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function onSubmit(e) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await api("/api/customer/login", { method: "POST", body: { username, password } });
-      router.push("/dashboard");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
-  return (
-    <div className="zekra-dashboard">
-      <div className="zekra-center-screen">
-        <form className="zekra-panel" style={{ width: 360 }} onSubmit={onSubmit}>
-          <div className="zekra-section-title">ZEKRA</div>
-          <h1 style={{ fontSize: 30, marginBottom: 24 }}>Sign in to your website</h1>
+  const { username, password } = req.body || {};
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password are required" });
+  }
 
-          <div className="zekra-field">
-            <label>Username</label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
-          </div>
+  const db = supabaseAdmin();
+  const { data: customer, error } = await db
+    .from("customers")
+    .select("id, username, password_hash, slug")
+    .eq("username", username)
+    .maybeSingle();
 
-          <div className="zekra-field">
-            <label>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
+  if (error) return res.status(500).json({ error: "Server error" });
+  if (!customer) return res.status(401).json({ error: "Incorrect username or password" });
 
-          <button className="zekra-btn primary" type="submit" disabled={loading} style={{ width: "100%" }}>
-            {loading ? "Signing in…" : "Sign in"}
-          </button>
+  const ok = await verifyPassword(password, customer.password_hash);
+  if (!ok) return res.status(401).json({ error: "Incorrect username or password" });
 
-          {error && <div className="zekra-error">{error}</div>}
-        </form>
-      </div>
-    </div>
-  );
+  issueCustomerSession(res, customer);
+  return res.status(200).json({ ok: true, slug: customer.slug });
 }
