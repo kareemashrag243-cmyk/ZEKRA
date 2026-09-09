@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "../../../lib/supabase";
-import { verifyPassword, issueAdminSession } from "../../../lib/auth";
+import { verifyPassword, issueCustomerSession } from "../../../lib/auth";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -12,18 +12,18 @@ export default async function handler(req, res) {
   }
 
   const db = supabaseAdmin();
-  const { data: admin, error } = await db
-    .from("admins")
-    .select("id, username, password_hash")
+  const { data: customer, error } = await db
+    .from("customers")
+    .select("id, username, password_hash, slug")
     .eq("username", username)
     .maybeSingle();
 
   if (error) return res.status(500).json({ error: "Server error" });
-  if (!admin) return res.status(401).json({ error: "Incorrect username or password" });
+  if (!customer) return res.status(401).json({ error: "Incorrect username or password" });
 
-  const ok = await verifyPassword(password, admin.password_hash);
+  const ok = await verifyPassword(password, customer.password_hash);
   if (!ok) return res.status(401).json({ error: "Incorrect username or password" });
 
-  issueAdminSession(res, admin);
-  return res.status(200).json({ ok: true });
+  issueCustomerSession(res, customer);
+  return res.status(200).json({ ok: true, slug: customer.slug });
 }
